@@ -1,0 +1,131 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Conservation of Halton Flood Data</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  
+    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.14/"></script>
+  
+  <script>  
+    require([
+      "esri/WebMap",
+      "esri/views/MapView",
+      "esri/widgets/Legend",
+      "esri/widgets/ScaleBar",
+      "esri/widgets/BasemapToggle",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/LayerList",
+      "esri/widgets/Search",
+    ], function(WebMap, MapView, Legend, ScaleBar, LayerList, BasemapToggle, BasemapGallery, Search) {
+
+      var webmap = new WebMap({
+        portalItem: {
+          id: "64fbd0604dc24dc4b3c411934a3b3c39"
+        }
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        map: webmap
+        //center: [-118.80500,34.02700],
+        //zoom: 13
+      });
+      
+      //Create a coordinates widget
+      var coordsWidget = document.createElement("div");
+      coordsWidget.id = "coordsWidget";
+      coordsWidget.className = "esri-widget esri-component";
+      coordsWidget.style.padding = "7px 15px 5px";
+
+      view.ui.add(coordsWidget, "bottom-left");
+      
+      function showCoordinates(pt) {
+        var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+            " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+            " | Zoom " + view.zoom;
+        coordsWidget.innerHTML = coords;
+      }
+      
+      view.watch("stationary", function(isStationary) {
+        showCoordinates(view.center);
+      });
+
+      view.on("pointer-move", function(evt) {
+        showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+      });
+      
+      
+      // Search widget
+      var search = new Search({
+        view: view
+      });
+      
+      view.ui.add(search, "bottom-left");
+
+      // On click to find address
+      view.on("click", function(evt){
+        search.clear();
+        view.popup.clear();
+        if (search.activeSource) {
+          var geocoder = search.activeSource.locator; // World geocode service
+          var params = {
+            location: evt.mapPoint
+          };
+          geocoder.locationToAddress(params)
+            .then(function(response) { // Show the address found
+              var address = response.address;
+              showPopup(address, evt.mapPoint);
+            }, function(err) { // Show no address found
+              showPopup("No address found.", evt.mapPoint);
+            });
+        }
+      });
+
+      function showPopup(address, pt) {
+        view.popup.open({
+          title:  + Math.round(pt.longitude * 100000)/100000 + "," + Math.round(pt.latitude * 100000)/100000,
+          content: address,
+          location: pt
+        });
+      }
+
+      //Legend
+      var legend = new Legend({
+        view: view
+      });
+            
+      view.ui.add(legend, "top-right");
+
+      // Create a Scale Bar
+      var scalebar = new ScaleBar({
+        view: view
+      });
+            
+      view.ui.add(scalebar, "top-left");
+ 
+      //Add a basemap gallery
+      var basemapGallery = new BasemapGallery({
+        view: view
+      });
+          
+      // Add widget to the top right corner of the view
+      view.ui.add(basemapGallery, {
+        position: "bottom-right"
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+  <!-- <div id=" "></div> -->
+</body>
+</html>
