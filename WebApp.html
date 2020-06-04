@@ -20,8 +20,14 @@
       "esri/Map",
       "esri/views/MapView",
       "esri/layers/FeatureLayer",
+      "esri/views/MapView",
       "esri/widgets/Legend",
-    ],function(Map, MapView, FeatureLayer, Legend, ) {
+      "esri/widgets/ScaleBar",
+      "esri/widgets/BasemapToggle",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/LayerList",
+      "esri/widgets/Search",
+    ],function(Map, MapView, FeatureLayer, Legend, ScaleBar, LayerList, BasemapToggle, BasemapGallery, Search) {
 
       var map = new Map({
         basemap: "topo-vector"
