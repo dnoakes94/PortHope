@@ -22,12 +22,11 @@
       "esri/layers/FeatureLayer",
       "esri/views/MapView",
       "esri/widgets/Legend",
-      "esri/widgets/ScaleBar",
       "esri/widgets/BasemapToggle",
       "esri/widgets/BasemapGallery",
       "esri/widgets/LayerList",
       "esri/widgets/Search",
-    ],function(Map, MapView, FeatureLayer, Legend, ScaleBar, LayerList, BasemapToggle, BasemapGallery, Search) {
+    ],function(Map, MapView, FeatureLayer, Legend, LayerList, BasemapToggle, BasemapGallery, Search) {
 
       var map = new Map({
         basemap: "topo-vector"
@@ -85,9 +84,9 @@
         });
       }  
     
-           //Legend
-           var legend = new Legend({
-        view: view
+      //Legend
+      var legend = new Legend({
+      view: view
       });
             
       view.ui.add(legend, "bottom-right");
@@ -99,6 +98,34 @@
       coordsWidget.style.padding = "7px 15px 5px";
 
       view.ui.add(coordsWidget, "bottom-left");
+      
+      function showCoordinates(pt) {
+        var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+            " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+            " | Zoom " + view.zoom;
+        coordsWidget.innerHTML = coords;
+      }
+      
+      view.watch("stationary", function(isStationary) {
+        showCoordinates(view.center);
+      });
+
+      view.on("pointer-move", function(evt) {
+        showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+      });
+     
+     //Add a basemap gallery
+     var basemapGallery = new BasemapGallery({
+        view: view
+      });
+          
+      // Add widget to the bottom right corner of the view
+      view.ui.add(basemapGallery, {
+        position: "bottom-right"
+      });
+
+
+
      });
   </script>
 </head>
