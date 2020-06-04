@@ -25,7 +25,8 @@
       "esri/widgets/BasemapGallery",
       "esri/widgets/LayerList",
       "esri/widgets/Search",
-    ], function(WebMap, MapView, Legend, ScaleBar, LayerList, BasemapToggle, BasemapGallery, Search) {
+      "esri/layers/FeatureLayer"
+    ], function(WebMap, MapView, Legend, ScaleBar, LayerList, BasemapToggle, BasemapGallery, Search, FeatureLayer) {
 
       var webmap = new WebMap({
         portalItem: {
@@ -63,6 +64,33 @@
         showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
       });
       
+
+      //Filter Layer and Query Reuslts
+      var featureLayer = new FeatureLayer({
+         url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/0",
+         outFields: ["*"], // Return all fields so it can be queried client-side
+         popupTemplate: {  // Enable a popup
+           title: "{mm20}", // Show attribute value
+           content: "The trail elevation gain is {ELEV_GAIN} ft."  // Display in pop-up
+         }
+       });
+
+       map.add(featureLayer);
+
+       var sqlExpressions = ["mm20 = 1 ", "mm25 = 1"];
+
+      var selectFilter = document.createElement("select");
+      selectFilter.setAttribute("class", "esri-widget esri-select");
+      selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+      sqlExpressions.forEach(function(sql){
+        var option = document.createElement("option");
+        option.value = sql;
+        option.innerHTML = sql;
+        selectFilter.appendChild(option);
+      });
+
+      view.ui.add(selectFilter, "top-right");
       
       // Search widget
       var search = new Search({
