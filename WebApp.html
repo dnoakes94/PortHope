@@ -16,7 +16,7 @@
   <script src="https://js.arcgis.com/4.15/"></script>
   
   <script>  
-    require([
+     require([
       "esri/Map",
       "esri/views/MapView",
       "esri/layers/FeatureLayer"
@@ -29,11 +29,57 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [-118.80500, 34.02700],
+        center: [-78.2935, 43.9492],
         zoom: 13
       });
 
-    });
+          // Pipes feature layer (lines)
+      var pipeslayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/1"
+      });
+
+      map.add(pipeslayer, 0);
+       
+      //Filter Layer and Query Reuslts
+      var featureLayer = new FeatureLayer({
+         url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/0",
+         outFields: ["*"], // Return all fields so it can be queried client-side
+       });
+       
+
+       map.add(featureLayer);
+      var sqlExpressions = ["mm20 = 1 ","mm25 = 1 ","mm30 = 1 ","mm35 = 1 ","mm40 = 1 ","mm45= 1 ","mm50 = 1 ","mm55 = 1 ","mm60 = 1 ","mm65 = 1 ","mm70 = 1 ","mm75 = 1 ","mm80 = 1 ","mm85 = 1 ","mm90 = 1 ","mm95 = 1 ","mm100 = 1 ","mm105 = 1 ","mm110 = 1 ", ];
+
+      var selectFilter = document.createElement("select");
+      selectFilter.setAttribute("class", "esri-widget esri-select");
+      selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+      sqlExpressions.forEach(function(sql){
+        var option = document.createElement("option");
+        option.value = sql;
+        option.innerHTML = sql;
+        selectFilter.appendChild(option);
+      });
+
+      view.ui.add(selectFilter, "top-right");
+     
+       function setFeatureLayerFilter(expression) {
+        featureLayer.definitionExpression = expression;
+      }
+       selectFilter.addEventListener('change', function (event) {
+        setFeatureLayerFilter(event.target.value);
+      });
+  
+     function setFeatureLayerViewFilter(expression) {
+        view.whenLayerView(featureLayer).then(function(featureLayerView) {
+          featureLayerView.filter = {
+            where: expression
+          };
+        });
+      }  
+    
+     
+     });
   </script>
 </head>
 <body>
