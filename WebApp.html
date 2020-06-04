@@ -19,8 +19,9 @@
      require([
       "esri/Map",
       "esri/views/MapView",
-      "esri/layers/FeatureLayer"
-    ],function(Map, MapView, FeatureLayer) {
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Legend",
+    ],function(Map, MapView, FeatureLayer, Legend, ) {
 
       var map = new Map({
         basemap: "topo-vector"
@@ -85,6 +86,13 @@
             
       view.ui.add(legend, "bottom-right");
 
+       //Create a coordinates widget
+       var coordsWidget = document.createElement("div");
+      coordsWidget.id = "coordsWidget";
+      coordsWidget.className = "esri-widget esri-component";
+      coordsWidget.style.padding = "7px 15px 5px";
+
+      view.ui.add(coordsWidget, "bottom-left");
      });
   </script>
 </head>
