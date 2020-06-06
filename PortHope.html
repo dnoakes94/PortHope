@@ -3,11 +3,23 @@
 <head>
 <title>Port Hope Wastewater Pipe Network Analysis</title>
 
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <link rel="stylesheet" href="C:\Users\DanNo\Documents\GEOM68\2020Data\PortHope\lib\leaflet.css" />
 <script src="C:\Users\DanNo\Documents\GEOM68\2020Data\PortHope\lib\leaflet.js"></script>
 
 </head>
 <body>
-    <iframe width="500" height="300" src="https://api.maptiler.com/maps/basic/?key=cSStb3nEPHx8TQJ3ihtl#1.0/0.00000/0.00000"></iframe>
+    <div id="map"></div>
+    <p><a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a></p>
+    <script>
+      var map = L.map('map').setView([0, 0], 1);
+      L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=cSStb3nEPHx8TQJ3ihtl',{
+        tileSize: 512,
+        zoomOffset: -1,
+        minZoom: 1,
+        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
+        crossOrigin: true
+      }).addTo(map);
+    </script>
 </body>
 </html>
