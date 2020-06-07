@@ -278,6 +278,16 @@ p a:hover {
 	padding: 0;
 	width: 300px;
 }
+
+#body1 > ul li {
+	display: block;
+	float: center;
+
+	margin: 0 1000px 2000px;
+	padding: 0;
+	width: 300px;
+}
+
 #body > ul li a {
 	color: #000;
 	display: block;
