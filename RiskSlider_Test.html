@@ -1,0 +1,175 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Risk Analysis Slider App</title>
+    <style>
+    html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    #sliderDiv{
+        background-color: rgb(240,240,240);
+        width: 25%;
+        height: 25%;
+    }
+
+    #infoDiv {
+        background-color: white;
+        color: black;
+        padding: 6px;
+        width: 400px;
+      }
+
+      #results {
+        font-weight: bolder;
+        padding-top: 10px;
+      }
+
+      .slider {
+        width: 100%;
+        height: 60px;
+      }
+
+      #drop-downs {
+        padding-bottom: 15px;
+      }
+    </style>
+    
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    
+    <script>  
+        require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/LayerList",
+        "esri/widgets/Slider",
+        "esri/layers/GraphicsLayer",
+        "esri/geometry/geometryEngine",
+        "esri/Graphic",
+        "esri/widgets/Slider"
+    ],function(Map, MapView, FeatureLayer, LayerList,  GraphicsLayer, geometryEngine, Graphic, Slider) 
+        {
+
+        // var map = new Map({
+        // basemap: "topo-vector"
+        // });
+
+        var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-78.2935, 43.9492],
+        zoom: 13
+        });
+
+        // Pipes feature layer (lines)
+        var pipeslayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/1"
+        });
+
+        map.add(pipeslayer, 0);
+        
+            // Pipes feature layer (lines)
+        var riskLayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/0"
+        });
+
+        map.add(riskLayer, 1);
+
+        var risk;
+
+        var riskSlider = new Slider({
+        container: "risk",
+        min: 20,
+        max: 100,
+        steps: 5,
+        values: [9],
+        visibleElements: {
+        labels: true,
+        rangeLabels: true
+        }
+        });
+
+        var queryRisk = document.getElementById("query-Risk");
+
+        // Pre-Calculated Risk For Associated Pipes
+        var riskAttributes = new FeatureLayer({
+          url: riskLayer,
+          outFields: ["*"],
+          visible: false
+        });
+
+        // GraphicsLayer for displaying results
+        var resultsLayer = new GraphicsLayer();
+
+        var map = new Map({
+          basemap: "dark-gray",
+          layers: [pipeslayer, riskLayer, resultsLayer]
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [-78.7408, 44.3566],
+          zoom: 10
+        });
+
+        view.ui.add("infoDiv", "top-right");
+
+        // Get the rainfall value set by the user
+        riskSlider.on("thumb-drag", function(event) {
+        risk = event.value;
+        });
+
+        // query for rainfall fields with the specified mm amount
+        // when the query button is clicked
+        queryRisk.addEventListener("click", function() {
+          queryRainfall().then(displayResults);
+        });
+
+        function queryRainfall() {
+        var query = riskAttributes.createQuery();
+        query.where = "mag >= " + magSlider.values[0];
+        query.geometry = wellBuffer;
+        query.spatialRelationship = "intersects";
+
+        return quakesLayer.queryFeatures(query);
+        }
+    
+        // display the rainfall query results in the view
+        function displayResults(results) {
+            resultsLayer.removeAll();
+            var features = results.features.map(function(graphic) {
+                graphic.symbol = {
+                    type: "simple-line", // autocasts as new SimpleLineSymbol()
+                    // style: "diamond",
+                    size: 3,
+                    color: "darkorange"
+                };
+            return graphic;
+        }); 
+        
+        var numOfSegments = features.length;
+
+            document.getElementById("results").innerHTML =
+            numOfSegments + " segments at risk";
+            resultsLayer.addMany(features);
+        }
+});
+    </script>
+</head>
+<body>
+    
+    <div id="viewDiv"></div>
+    <!-- Risk Slider Visualization: -->
+      <div id="risk" class="slider"></div>
+      <button id="query-pipes" class="esri-widget">Query Rainfall Amounts</button>
+      <div id="results" class="esri-widget"></div>
+
+</body>
+</html>

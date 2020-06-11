@@ -1,0 +1,169 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>ArcGIS JavaScript Tutorials: Create a Starter App</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.15/"></script>
+  
+  <script>  
+    require([
+    "esri/Map",
+    "esri/views/MapView",
+    "esri/layers/FeatureLayer",
+    "esri/widgets/Legend",
+    "esri/widgets/BasemapToggle",
+    "esri/widgets/BasemapGallery",
+    "esri/widgets/LayerList",
+    "esri/widgets/Search",
+    "esri/layers/GraphicsLayer",
+    "esri/geometry/geometryEngine",
+    "esri/Graphic",
+    "esri/widgets/Slider"
+    ],function(Map, MapView, FeatureLayer, Legend, LayerList, Search, GraphicsLayer,geometryEngine, Graphic, Slider) {
+
+    var map = new Map({
+    basemap: "topo-vector"
+    });
+
+    var view = new MapView({
+    container: "viewDiv",
+    map: map,
+    center: [-78.2935, 43.9492],
+    zoom: 13
+    });
+
+        // Pipes feature layer (lines)
+    var pipeslayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/1"
+    });
+
+    map.add(pipeslayer, 0);
+    
+     // Pipes feature layer (lines)
+     var riskLayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/0"
+    });
+
+    map.add(riskLayer, 1);
+    
+    const slider = new Slider({
+        labelsVisible: true,
+        labelInputsEnabled: true,
+        rangeLabelsVisible: true,
+        rangeLabelInputsEnabled: false,
+        layout: "horizontal",  
+        // value is horizontal or 
+        // vertical - to make taller, 
+        // change the css of the container
+        min: 0,
+        max: 10,
+        values: [5],
+        container: "sliderDiv"
+    });
+    
+    function queryEarthquakes() {
+          var query = quakesLayer.createQuery();
+          query.where = "mag >= " + magSlider.values[0];
+
+          return quakesLayer.queryFeatures(query);
+        }
+
+    function displayResults(results) {
+        resultsLayer.removeAll();
+        var features = results.features.map(function(graphic) {
+        graphic.symbol = {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            style: "diamond",
+            size: 6.5,
+            color: "darkorange"
+        };
+    return graphic;
+    var numQuakes = features.length;
+        document.getElementById("results").innerHTML =
+        numQuakes + " earthquakes found";
+        resultsLayer.addMany(features);
+    }
+    
+    // //Filter Layer and Query Reuslts
+    // var featureLayer = new FeatureLayer({
+    //     url: "https://services1.arcgis.com/pMeXRvgWClLJZr3s/arcgis/rest/services/Risk_Files/FeatureServer/0",
+    //     outFields: ["*"], // Return all fields so it can be queried client-side
+    // });
+    
+    // //Get the magnitude value set by the user
+    // magSlider.on("thumb-drag", function(event) {
+    //     magnitude = event.value;
+    // });
+
+    // function displayResults(results) {
+    //       resultsLayer.removeAll();
+    //       var features = results.features.map(function(graphic) {
+    //         graphic.symbol = {
+    //           type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+    //           style: "diamond",
+    //           size: 6.5,
+    //           color: "darkorange"
+    //         };
+    //         return graphic;
+    //       });
+    //       var numQuakes = features.length;
+    //       document.getElementById("results").innerHTML =
+    //         numQuakes + " earthquakes found";
+    //       resultsLayer.addMany(features);
+    //     }
+    //   });
+    //   map.add(featureLayer);
+    //   var sqlExpressions = ["mm20 = 1 ","mm25 = 1 ","mm30 = 1 ","mm35 = 1 ","mm40 = 1 ","mm45= 1 ","mm50 = 1 ","mm55 = 1 ","mm60 = 1 ","mm65 = 1 ","mm70 = 1 ","mm75 = 1 ","mm80 = 1 ","mm85 = 1 ","mm90 = 1 ","mm95 = 1 ","mm100 = 1 ","mm105 = 1 ","mm110 = 1 ", ];
+
+    //   var selectFilter = document.createElement("select");
+    //   selectFilter.setAttribute("class", "esri-widget esri-select");
+    //   selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+    //   sqlExpressions.forEach(function(sql){
+    //     var option = document.createElement("option");
+    //     option.value = sql;
+    //     option.innerHTML = sql;
+    //     selectFilter.appendChild(option);
+    //   });
+
+    //   view.ui.add(selectFilter, "top-right");
+     
+    //    function setFeatureLayerFilter(expression) {
+    //     featureLayer.definitionExpression = expression;
+    //   }
+    //    selectFilter.addEventListener('change', function (event) {
+    //     setFeatureLayerFilter(event.target.value);
+    //   });
+  
+    //  function setFeatureLayerViewFilter(expression) {
+    //     view.whenLayerView(featureLayer).then(function(featureLayerView) {
+    //       featureLayerView.filter = {
+    //         where: expression
+    //       };
+    //     });
+    //   }  
+    
+    //Legend
+    var legend = new Legend({
+    view: view
+    });
+        
+    view.ui.add(legend, "bottom-right");
+
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>

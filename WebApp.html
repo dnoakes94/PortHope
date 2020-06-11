@@ -12,7 +12,7 @@
     }
   </style>
   
-    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.15/"></script>
   
   <script>  
@@ -24,7 +24,7 @@
       "esri/widgets/BasemapToggle",
       "esri/widgets/BasemapGallery",
       "esri/widgets/LayerList",
-      "esri/widgets/Search",
+      "esri/widgets/Search"
     ],function(Map, MapView, FeatureLayer, Legend, LayerList) {
 
       var map = new Map({
@@ -53,6 +53,7 @@
        
 
        map.add(featureLayer);
+       
       var sqlExpressions = ["mm20 = 1 ","mm25 = 1 ","mm30 = 1 ","mm35 = 1 ","mm40 = 1 ","mm45= 1 ","mm50 = 1 ","mm55 = 1 ","mm60 = 1 ","mm65 = 1 ","mm70 = 1 ","mm75 = 1 ","mm80 = 1 ","mm85 = 1 ","mm90 = 1 ","mm95 = 1 ","mm100 = 1 ","mm105 = 1 ","mm110 = 1 ", ];
 
       var selectFilter = document.createElement("select");
