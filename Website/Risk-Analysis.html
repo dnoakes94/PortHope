@@ -36,17 +36,54 @@
 	<div id="body">
 		<h1><span>Pipe Infrastructure Risk Analysis</span></h1>
 		<div>
-			<img src="" alt="Insert Photo">
+			<!-- <img src="" alt="Insert Photo"> -->
 			<div class="article">
 				<h2>About this Project</h2>
 				<p>
-					Write up here
+					The slider displayed in this web application was created with the use of ArcGIS Operations Dashboard. ArcGIS Pro
+					was used for back end processing and data manipulation and python programming was used to create the desktop tool. 
+				</p>
+				<p>	 
+					The process of accurately depicting areas at risk during a rainstorm event required several steps:
 				</p>
 				<p>
-					Write up here and some pictures
-				</p>
-				<p>
-					write up here
+					<ol>
+						<li>
+							Calculate the maximum volume of water that can travel through a pipe to establish a maximum capacity for each pipe. 
+						</li>
+						<br/>
+						<li>
+							Calculate Dry Weather Flow (DWF) based on daily pipe usage. To find the DWF the number of parcels connecting to the pipe 
+							network were calculated and then an average waterwater output per property type was assumed based on the land classification (i.e. residential or industrial).
+						</li>
+						<br/>
+						<li>
+							Pipe roughness was calculated and applied to the final calculation to account for friction applied to the flow by a channel.
+						</li>
+						<br/>
+						<li> 
+							Next, rainfall derived inflow and infiltration was calculated using an average inflow rate for urban residential areas in all calculations. 
+							This was used to calculate flow during a rainstorm event. Ultimately, it was added to the DWF and if it surpassed max capacity a risk layer 
+							would be displayed for those pipe segments.
+						</li>
+						<br/>
+						<li>  
+							A tool was created as a python script and performed all calculations backend and took a user input for rainfall amount that would alter the
+							output of the pipe segments at risk.
+						</li>
+						<br/>
+						<li>
+							Another python script was developed which added all values to a single field in the attribute table of the conduits feature class. It
+							displays the amount of rain that must fall in a single event to put each portion of pipe at risk.
+						</li>
+
+						<br/>
+						<li>
+							When creating the slider for the final web application output a query was used on data from the attribute table in the conduits feature class 
+							to display areas at or below the amount being shown on the slider.
+						</li>
+					</ol>
+					
 				</p>
 			</div>
 		</div>
