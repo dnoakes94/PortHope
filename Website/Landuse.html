@@ -84,13 +84,36 @@
 			<div>
 				<div class="article">
 					<h2>Additional Information</h2>
-					<h3>Creating the model</h3>
+					<h3>Creating the Cloudburst Model</h3>
 					<p>
-						Discuss the model 
+						1.	Using the DEM layer provided in the supplied data package low lying areas less then .05m were filled to increase vertical 
+						accuracy of the model.
+						<br/>2.	After small sinks were filled the value of 1 was applied to the cells if the flood areas were considered a flood zone 
+						all other data received a ‘No Data’ value. This helped set up the tool with the preliminary flood zones in place but without 
+						any mathematical functions applied to them at this point.
+						<br/>3.	Region Group tool was used to assemble all flood zones into a single layer
+						<br/>4.	A Zonal statistics tool was then used to sum the elevation values and add them to a newly created field. A watershed was 
+						created to derive the flood zones.
+						<br/>5.	Next, the Get Raster Properties tool was used to get each cell value and then perform a calculate field function on the flood 
+						zones to calculate the total volume of the flood area. It was then added to a new field in the attribute table.
+						<br/>6.	The flood zones and the fill up field were combined to calculate the amount of rain (in millimeters) that must fall to fully 
+						fill the flood zone to its pour point. This was calculated by a simple equation; (flood zone volume(m3) / watershed area(m2)) * 1000 = 
+						Total Precipitation.
+						<br/>7.	Finally, a Raster to polygon tool was used to convert the flood zones to individual polygons and then they were dissolved to 
+						create individual flood zones that contained; fill up volume (in meters cubed), amount of rain to fill the flood spot in a 90 minute burst (in millimeters), and the total area of the flood zone (in meters squared).
+							
 					</p>
 				</div>
 				<div>
-					<img src="Images/RiskToolModel.JPG" alt="Risk Model" Width = "650">
+					<p>Full Model</p>
+					<img src="Images/FullModelCloudburst.JPG" alt="Risk Model" Width = "1000">
+					<p>Part 1</p>
+					<img src="Images/Model1.JPG" alt="Risk Model" Width = "800">
+					<p>Part 2</p>
+					<img src="Images/Model2.JPG" alt="Risk Model" Width = "800">
+					<p>Part 3</p>
+					<img src="Images/Model3.JPG" alt="Risk Model" Width = "800">
+					
 				</div>
 			</div>
 		</div>
