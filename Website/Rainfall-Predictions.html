@@ -36,17 +36,21 @@
 	<div id="body">
 		<h1><span>Rainfall Time Slider</span></h1>
 		<div>
-			<img src="" alt="Insert Photo">
+			<!-- <img src="" alt="Insert Photo"> -->
 			<div class="article">
 				<h2>About this Project</h2>
 				<p>
-					Write up here
+					For this solution, climate precipitation data was downloaded from Climate Data Canada for maximum 1-day total 
+					precipitation amounts over a 100-year period starting in 2020 in a tiling format (Climate Data Canada 2020). 
 				</p>
 				<p>
-					Write up here and some pictures
+					These were imported into ArcGIS Pro and a series of geoprocessing tools were run to put them into a readable 
+					spatial format. Once the points were loaded from the tile layers, a kriging interpolation was run at 10-year intervals. 
 				</p>
 				<p>
-					write up here
+					Once these raster surfaces were generated, they were compiled into a raster mosaic dataset. In order to host this unique 
+					data set, they were uploaded to Fleming College’s Luna server to host the data and were then configured within the time-aware
+					configurable web application through ArcGIS Online.
 				</p>
 			</div>
 		</div>
